@@ -17,25 +17,18 @@ public class FuelStationService <T extends BaseResponse> {
 
     private static final Logger log = LoggerFactory.getLogger(FuelStationService.class);
 
-    @Value("${service.base.url}")
-    private String baseUrl;
-
     @Value("${service.ok}")
     private String ok;
 
     @Value("${service.status}")
     private String status;
 
-    @Value("${service.message}")
-    private String message;
-
-    @Value("${service.request.type}")
-    private String reqParamType;
-
-    @Value("${service.request.sort}")
-    private String reqParamSort;
+    @Value("${service.message.error}")
+    private String errorMessage;
 
 
+
+    // Generic class for all get requests
     public T getServiceModel(String url, Class<T> type) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -46,6 +39,9 @@ public class FuelStationService <T extends BaseResponse> {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            response.setMessage(errorMessage);
+            response.setOk(ok);
+            response.setStatus(status);
         }finally {
             printResponse(response);
         }
@@ -53,6 +49,7 @@ public class FuelStationService <T extends BaseResponse> {
 
     }
 
+    // Generic class for logging any response
     private void printResponse(T response) {
         try {
             ObjectMapper mapper = new ObjectMapper();

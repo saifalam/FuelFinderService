@@ -66,6 +66,7 @@ public class ServiceController {
 
     @ResponseBody
     @RequestMapping(value ="/price/all", method = RequestMethod.POST)
+    // TODO: Need to fix the Request and Response object structure and fix the URL as well
     public PriceDetailResponse getAllPrices (@RequestBody AllStationRequest requestModel) {
         PriceDetailResponse response = null;
         if(requestModel != null) {
