@@ -3,7 +3,7 @@ package com.fuelfinder.model.request;
 /**
  * Created by saif on 23.11.17.
  */
-public class BaseRequestModel {
+public class BaseRequest {
    private String id;
    private String apiKey;
 

@@ -3,19 +3,20 @@ package com.fuelfinder.model.response;
 /**
  * Created by saif on 22.11.17.
  */
-public class Station {
+public class Station extends Price {
     private String id;
     private String name;
     private String brand;
     private String distance;
-    private boolean isOpen;
-    private float price;
+    private String isOpen;
     private String place;
     private String street;
     private String houseNumber;
     private String postCode;
     private float lat;
     private float lng;
+    private OpeningTime[] openingTimes;
+    private String wholeDay;
 
     public String getId() {
         return id;
@@ -49,20 +50,12 @@ public class Station {
         this.distance = distance;
     }
 
-    public boolean isOpen() {
+    public String getIsOpen() {
         return isOpen;
     }
 
-    public void setOpen(boolean open) {
-        isOpen = open;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen;
     }
 
     public String getPlace() {
@@ -111,5 +104,21 @@ public class Station {
 
     public void setLng(float lng) {
         this.lng = lng;
+    }
+
+    public OpeningTime[] getOpeningTimes() {
+        return openingTimes;
+    }
+
+    public void setOpeningTimes(OpeningTime[] openingTimes) {
+        this.openingTimes = openingTimes;
+    }
+
+    public String getWholeDay() {
+        return wholeDay;
+    }
+
+    public void setWholeDay(String wholeDay) {
+        this.wholeDay = wholeDay;
     }
 }

@@ -1,9 +1,10 @@
 package com.fuelfinder.controller;
 
+import com.fuelfinder.model.request.AllStationRequest;
+import com.fuelfinder.model.request.PriceRequest;
 import com.fuelfinder.model.response.PriceDetailResponse;
 import com.fuelfinder.model.response.SearchResponse;
 import com.fuelfinder.model.response.StationDetailResponse;
-import com.fuelfinder.model.request.AllStationRequest;
 import com.fuelfinder.service.FuelStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +43,8 @@ public class ServiceController {
     @ResponseBody
     @RequestMapping(value ="/station/all", method = RequestMethod.POST)
     public SearchResponse getAllFuelStation (@RequestBody AllStationRequest requestModel) {
-        SearchResponse response = null;
-        if(requestModel != null && !requestModel.getApiKey().equals("")) {
+        SearchResponse response;
+        if(requestModel != null && requestModel.getApiKey()!=null && !requestModel.getApiKey().isEmpty()) {
 
             // If type = all is always sorted by distance - the specification of the sorting is then optional
             String mainUrl = baseUrl+"list.php"+"?lat="+ requestModel.getLatitude() +"&lng="+
@@ -66,13 +67,19 @@ public class ServiceController {
 
     @ResponseBody
     @RequestMapping(value ="/price/all", method = RequestMethod.POST)
-    // TODO: Need to fix the Request and Response object structure and fix the URL as well
-    public PriceDetailResponse getAllPrices (@RequestBody AllStationRequest requestModel) {
-        PriceDetailResponse response = null;
-        if(requestModel != null) {
+    public PriceDetailResponse getAllPrices (@RequestBody PriceRequest requestModel) {
+        PriceDetailResponse response;
 
-            String mainUrl = "https://creativecommons.tankerkoenig.de/json/prices.php?ids=4429a7d9-fb2d-4c29-8cfe-2ca90323f9f8,446bdcf5-9f75-47fc-9cfa-2c3d6fda1c3b,60c0eefa-d2a8-4f5c-82cc-b5244ecae955,44444444-4444-4444-4444-444444444444&apikey=00000000-0000-0000-0000-000000000002";
+        if(requestModel != null && !requestModel.getApiKey().isEmpty() && requestModel.getIdList().size() >0) {
+            StringBuilder ids = new StringBuilder();
+            for(int i = 0; i < requestModel.getIdList().size(); i++) {
+                ids.append(requestModel.getIdList().get(i));
+                if(i != requestModel.getIdList().size()-1) {
+                    ids.append(",") ;
+                }
+            }
 
+            String mainUrl = baseUrl+"prices.php?ids="+ids.toString()+"&apikey="+requestModel.getApiKey();
             response = (PriceDetailResponse) stationService.getServiceModel(mainUrl, PriceDetailResponse.class);
         }
         else {
@@ -81,8 +88,8 @@ public class ServiceController {
             response.setStatus(status);
             response.setMessage(message);
         }
-
         return response;
+
     }
 
 
@@ -91,9 +98,9 @@ public class ServiceController {
     @RequestMapping(value ="/station/detail/{id}/{apikey}", method = RequestMethod.GET)
     public StationDetailResponse getStationDetail (@PathVariable("id") String id,
                                                    @PathVariable("apikey") String apikey) {
-        StationDetailResponse response = null;
+        StationDetailResponse response;
         if(!id.equals("") && !apikey.equals("")) {
-            String mainUrl = baseUrl+"detail.php"+"?id="+id+"&apikey="+apikey;
+            String mainUrl = baseUrl+"detail.php?id="+id+"&apikey="+apikey;
             response = (StationDetailResponse) stationService.getServiceModel(mainUrl, StationDetailResponse.class);
         }
         else {

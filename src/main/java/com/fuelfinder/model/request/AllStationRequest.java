@@ -3,7 +3,7 @@ package com.fuelfinder.model.request;
 /**
  * Created by saif on 23.11.17.
  */
-public class AllStationRequest extends BaseRequestModel {
+public class AllStationRequest extends BaseRequest {
 
     private float latitude;
     private float longitude;
