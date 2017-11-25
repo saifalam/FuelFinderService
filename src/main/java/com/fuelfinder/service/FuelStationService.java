@@ -6,8 +6,14 @@ import com.fuelfinder.model.response.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
 
 /**
  * Created by saif on 22.11.17.
@@ -29,28 +35,26 @@ public class FuelStationService <T extends BaseResponse> {
 
 
     // Generic class for all get requests
-    public T getServiceModel(String url, Class<T> type) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        T response = null;
-
+    public T getServiceModel(URI url, HttpEntity<T> entity, Class<T> type) {
+        ResponseEntity<T> response = null;
         try {
-            response = restTemplate.getForObject(url, type);
+            RestTemplate restTemplate = new RestTemplate();
+            response = restTemplate.exchange(url, HttpMethod.GET, entity, type);
 
+            if(response.getStatusCode() == HttpStatus.OK) {
+                 //TODO: Need to modify response according to the demand
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
-            response.setMessage(errorMessage);
-            response.setOk(ok);
-            response.setStatus(status);
         }finally {
             printResponse(response);
         }
-        return response;
+        return response.getBody();
 
     }
 
     // Generic class for logging any response
-    private void printResponse(T response) {
+    private void printResponse(ResponseEntity<T> response) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             String jsonInString = mapper.writeValueAsString(response);
@@ -59,75 +63,4 @@ public class FuelStationService <T extends BaseResponse> {
             ex.printStackTrace();
         }
     }
-
-/*    public SearchResponse getAllFuelStations (AllStationRequest requestModel) {
-        SearchResponse response = null;
-
-        if(requestModel != null && !requestModel.getApiKey().equals("")) {
-
-            // If type = all is always sorted by distance - the specification of the sorting is then optional
-            String mainUrl = baseUrl+"list.php"+"?lat="+ requestModel.getLatitude() +"&lng="+
-                    requestModel.getLongitude() +"&rad="+ requestModel.getRadius() +"&sort="+
-                    (requestModel.getType().equals("all") ? reqParamSort: requestModel.getSort())
-                    +"&type="+ requestModel.getType() +"&apikey="+ requestModel.getApiKey();
-
-            RestTemplate template = new RestTemplate();
-
-            try {
-                response = template.getForObject(mainUrl, SearchResponse.class);
-
-                if(!response.getOk().equals("true")) {
-                    response.setOk(ok);
-                    response.setStatus(status);
-                    response.setMessage(message);
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                printResponse((T) response);
-            }
-        }
-        else {
-            response = new SearchResponse();
-            response.setOk(ok);
-            response.setStatus(status);
-            response.setMessage(message);
-        }
-        return response;
-
-    }
-
-
-    public StationDetailResponse getStationDetail(String id, String apikey) {
-        StationDetailResponse response = null;
-
-        if(!id.equals("") && !apikey.equals("")) {
-            String mainUrl = baseUrl+"detail.php"+"?id="+id+"&apikey="+apikey;
-            RestTemplate template = new RestTemplate();
-
-            try {
-                response = template.getForObject(mainUrl, StationDetailResponse.class);
-
-                if(!response.getOk().equals("true")) {
-                    response.setOk(ok);
-                    response.setStatus(status);
-                    response.setMessage(message);
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                printResponse((T) response);
-            }
-        }
-        else {
-            response = new StationDetailResponse();
-            response.setOk(ok);
-            response.setStatus(status);
-            response.setMessage(message);
-        }
-        return response;
-    }*/
-
 }
