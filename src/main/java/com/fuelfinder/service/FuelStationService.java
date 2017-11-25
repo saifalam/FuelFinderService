@@ -29,6 +29,9 @@ public class FuelStationService <T extends BaseResponse> {
     @Value("${service.message.error}")
     private String errorMessage;
 
+    @Value("${service.message.success}")
+    private String successMessage;
+
 
 
     // Generic class for all get requests
@@ -45,6 +48,10 @@ public class FuelStationService <T extends BaseResponse> {
 
             if(response.getStatusCode() == HttpStatus.OK) {
                  //TODO: Need to modify response according to the demand
+                if(response.getBody().getOk().equals("true") && response.getBody().getMessage() == null) {
+                    response.getBody().setMessage(successMessage);
+                }
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();

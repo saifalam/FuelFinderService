@@ -5,7 +5,6 @@ package com.fuelfinder.model.request;
  */
 public class BaseRequest {
    private String id;
-   private String apiKey;
 
     public String getId() {
         return id;
@@ -13,13 +12,5 @@ public class BaseRequest {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
     }
 }

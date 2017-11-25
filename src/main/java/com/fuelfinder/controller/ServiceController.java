@@ -28,13 +28,16 @@ public class ServiceController {
     @Value("${service.price.url}")
     private String priceUrl;
 
+    @Value("${service.api.key}")
+    private String apikey;
+
     @Value("${service.ok}")
     private String ok;
 
     @Value("${service.status}")
     private String status;
 
-    @Value("${service.message}")
+    @Value("${service.message.invalid}")
     private String message;
 
     @Value("${service.request.type}")
@@ -42,6 +45,9 @@ public class ServiceController {
 
     @Value("${service.request.sort}")
     private String reqParamSort;
+
+    @Value("${service.request.default.radius}")
+    private float radius;
 
     @Autowired
     private FuelStationService stationService;
@@ -51,14 +57,15 @@ public class ServiceController {
     @RequestMapping(value ="/station/all", method = RequestMethod.POST)
     public SearchResponse getAllFuelStation (@RequestBody AllStationRequest requestModel) {
         SearchResponse response;
-        if(requestModel != null && requestModel.getApiKey()!=null && !requestModel.getApiKey().isEmpty()) {
+        if(requestModel != null) {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(listUrl)
                     .queryParam("lat", requestModel.getLatitude())
                     .queryParam("lng", requestModel.getLongitude())
-                    .queryParam("rad", requestModel.getRadius())
-                    .queryParam("sort", requestModel.getType().equals("all") ? reqParamSort: requestModel.getSort())
-                    .queryParam("type", requestModel.getType())
-                    .queryParam("apikey", requestModel.getApiKey());
+                    .queryParam("rad", requestModel.getRadius() > 0 ? requestModel.getRadius() : radius)
+                    .queryParam("sort", requestModel.getType().equals("all") ? reqParamSort: requestModel.getSort().
+                            toLowerCase().trim())
+                    .queryParam("type", requestModel.getType().toLowerCase().trim())
+                    .queryParam("apikey", apikey.trim());
             response = (SearchResponse) stationService.getServiceModel(builder.build().encode().toUri(), SearchResponse.class);
         }
         else {
@@ -76,10 +83,10 @@ public class ServiceController {
     @RequestMapping(value ="/price/all", method = RequestMethod.POST)
     public PriceDetailResponse getAllPrices (@RequestBody PriceRequest requestModel) {
         PriceDetailResponse response;
-        if(requestModel != null && !requestModel.getApiKey().isEmpty() && requestModel.getIdList().size() > 0) {
+        if(requestModel != null && requestModel.getIdList().size() > 0) {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(priceUrl)
                     .queryParam("ids", String.join(",",requestModel.getIdList()))
-                    .queryParam("apikey", requestModel.getApiKey());
+                    .queryParam("apikey", apikey.trim());
             response = (PriceDetailResponse) stationService.getServiceModel(builder.build().encode().toUri(), PriceDetailResponse.class);
         }
         else {
@@ -95,14 +102,13 @@ public class ServiceController {
 
 
     @ResponseBody
-    @RequestMapping(value ="/station/detail/{id}/{apikey}", method = RequestMethod.GET)
-    public StationDetailResponse getStationDetail (@PathVariable("id") String id,
-                                                   @PathVariable("apikey") String apikey) {
+    @RequestMapping(value ="/station/detail/{id}", method = RequestMethod.GET)
+    public StationDetailResponse getStationDetail (@PathVariable("id") String id) {
         StationDetailResponse response;
-        if(!id.equals("") && !apikey.equals("")) {
+        if(!id.equals("") && !id.isEmpty()) {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(detailUrl)
                     .queryParam("id", id)
-                    .queryParam("apikey", apikey);
+                    .queryParam("apikey", apikey.trim());
             response = (StationDetailResponse) stationService.getServiceModel(builder.build().encode().toUri(), StationDetailResponse.class);
         }
         else {
