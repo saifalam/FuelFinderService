@@ -6,10 +6,7 @@ import com.fuelfinder.model.response.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,9 +32,14 @@ public class FuelStationService <T extends BaseResponse> {
 
 
     // Generic class for all get requests
-    public T getServiceModel(URI url, HttpEntity<T> entity, Class<T> type) {
+    public T getServiceModel(URI url, Class<T> type) {
         ResponseEntity<T> response = null;
         try {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+            HttpEntity entity = new HttpEntity<>(headers);
+
             RestTemplate restTemplate = new RestTemplate();
             response = restTemplate.exchange(url, HttpMethod.GET, entity, type);
 
