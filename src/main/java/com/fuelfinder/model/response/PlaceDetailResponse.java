@@ -3,7 +3,7 @@ package com.fuelfinder.model.response;
 /**
  * Created by saif on 23.11.17.
  */
-public class StationDetailResponse extends BaseResponse {
+public class PlaceDetailResponse extends BaseResponse {
     private Station station;
 
     public Station getStation() {

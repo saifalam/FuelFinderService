@@ -4,7 +4,7 @@ import com.fuelfinder.model.request.AllStationRequest;
 import com.fuelfinder.model.request.PriceRequest;
 import com.fuelfinder.model.response.PriceDetailResponse;
 import com.fuelfinder.model.response.SearchResponse;
-import com.fuelfinder.model.response.StationDetailResponse;
+import com.fuelfinder.model.response.PlaceDetailResponse;
 import com.fuelfinder.service.FuelStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +54,7 @@ public class ServiceController {
 
 
     @ResponseBody
-    @RequestMapping(value ="/station/all", method = RequestMethod.POST)
+    @RequestMapping(value ="/place/all", method = RequestMethod.POST)
     public SearchResponse getAllFuelStation (@RequestBody AllStationRequest requestModel) {
         SearchResponse response;
         if(requestModel != null) {
@@ -96,23 +96,22 @@ public class ServiceController {
             response.setMessage(message);
         }
         return response;
-
     }
 
 
 
     @ResponseBody
-    @RequestMapping(value ="/station/detail/{id}", method = RequestMethod.GET)
-    public StationDetailResponse getStationDetail (@PathVariable("id") String id) {
-        StationDetailResponse response;
+    @RequestMapping(value ="/place/detail/{id}", method = RequestMethod.GET)
+    public PlaceDetailResponse getPlaceDetail (@PathVariable("id") String id) {
+        PlaceDetailResponse response;
         if(!id.equals("") && !id.isEmpty()) {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(detailUrl)
                     .queryParam("id", id)
                     .queryParam("apikey", apikey.trim());
-            response = (StationDetailResponse) stationService.getServiceModel(builder.build().encode().toUri(), StationDetailResponse.class);
+            response = (PlaceDetailResponse) stationService.getServiceModel(builder.build().encode().toUri(), PlaceDetailResponse.class);
         }
         else {
-            response = new StationDetailResponse();
+            response = new PlaceDetailResponse();
             response.setOk(ok);
             response.setStatus(status);
             response.setMessage(message);
