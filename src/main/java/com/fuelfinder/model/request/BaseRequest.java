@@ -6,7 +6,6 @@ package com.fuelfinder.model.request;
 public class BaseRequest {
    private String id;
    private String accessToken;
-   private String places[];
 
    //Page limit according to the network Strength
    private int limit;
@@ -33,13 +32,5 @@ public class BaseRequest {
 
     public void setLimit(int limit) {
         this.limit = limit;
-    }
-
-    public String[] getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(String[] places) {
-        this.places = places;
     }
 }

@@ -3,13 +3,14 @@ package com.fuelfinder.model.request;
 /**
  * Created by saif on 23.11.17.
  */
-public class AllStationRequest extends BaseRequest {
+public class AllPlacesRequest extends BaseRequest {
 
     private float latitude;
     private float longitude;
     private float radius;
     private String sort;
     private String type;
+    private String places[];
 
     public float getLatitude() {
         return latitude;
@@ -49,5 +50,13 @@ public class AllStationRequest extends BaseRequest {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String[] getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(String[] places) {
+        this.places = places;
     }
 }

@@ -1,10 +1,16 @@
 package com.fuelfinder.model.response;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.Serializable;
+
 /**
  * Created by saif on 24.11.17.
  */
-public class Price {
+@Entity
+public class Price implements Serializable {
 
+    @Id
     // Station ID
     private String id;
 
