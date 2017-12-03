@@ -5,7 +5,7 @@ package com.fuelfinder.model.request;
  */
 public class BaseRequest {
    private String id;
-   private String excessToken;
+   private String accessToken;
    private String places[];
 
    //Page limit according to the network Strength
@@ -19,12 +19,12 @@ public class BaseRequest {
         this.id = id;
     }
 
-    public String getExcessToken() {
-        return excessToken;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setExcessToken(String excessToken) {
-        this.excessToken = excessToken;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public int getLimit() {
